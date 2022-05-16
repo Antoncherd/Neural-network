@@ -1,16 +1,16 @@
 import numpy as np
 
 
-# function sugmoid
+# function sigmoid
 def sigmoid(x):
     return (2 / (1 + np.exp(-x)))-1
-#derivative of sigmoid
+# derivative of sigmoid
 def df(x):
     return (0.5*(1+x)*(1-x))
 
 
-# объект нейрон
-class neuiron:
+# object nueron declaration
+class neuron:
 
     def __init__(self, N_in_link):
         self.in_data = []  # inputs
@@ -19,7 +19,7 @@ class neuiron:
 
         self.grad = 0  # gradient parametr
 
-        self.weights = []  # веса входных сигналов, 0 вес для добавочного
+        self.weights = []  # input weights, 0 for additional
         for i in range(N_in_link):
             self.weights.append(0)
         self.weight_extra = 0
@@ -38,7 +38,7 @@ class neuiron:
             weights_i = self.weights[i]
             self.normalized_grad.append(weights_i * grad)
 
-    # расчет нейрона
+    # neuron computation
     def compute(self, in_array):
         self.in_data = in_array
         summ = 0
@@ -65,8 +65,7 @@ class neuiron:
     def delta_learning(self):
         return self.delta_learning
 
-
-# функция прямого расчета нейросети
+# forward neuronet computation function 
 def compute_full(in_array, matrix_neurons):
     in_array_variable = in_array
     in_array_variable_rewrite = []
@@ -136,8 +135,7 @@ def print_matrix_neuron (matrix_neuron):
         print("out_data from layer ", i, ":", array_out_i, "extra_weight = ", array_extra_i)
 
 
-
-# начальное заполнение нейросети
+# initial neuronet state 
 Weight1 = np.array([ [-0.2, 0.3, -0.4], [0.1, -0.3, -0.4]])
 Weight2 = np.array([0.2, 0.3])
 #Weight1 = np.array([[1.25, 1.32, -2.46],[-0.009, -0.392, 0.36]])
@@ -147,15 +145,15 @@ for i in range(3): # amount layers
     matrix.append([])
 
 for i in range(5): # amount neurons in 0 layer
-    matrix[0].append(neuiron(len(training_inputs[0])))
+    matrix[0].append(neuron(len(training_inputs[0])))
     matrix[0][i].weights = np.random.sample(len(training_inputs[0]))
 for i in range(3): # amount neurons in 0 layer
-    matrix[1].append(neuiron(len(matrix[0])))
+    matrix[1].append(neuron(len(matrix[0])))
     matrix[1][i].weights = np.random.rand(len(matrix[0]))
 
-matrix[2].append(neuiron(len(matrix[1])))   # out neuron
+matrix[2].append(neuron(len(matrix[1])))   # out neuron
 matrix[2][0].weights = np.random.rand(len(matrix[1]))
-#matrix[2].append(neuiron(3))
+#matrix[2].append(neuron(3))
 #matrix[2][0].weights = np.random.sample(3)
 
 real_out = compute_full(training_inputs[2], matrix)
@@ -163,21 +161,21 @@ print(training_inputs[2], real_out)
 print_matrix_neuron(matrix)
 
 for i in range(5000):
-
+    # 
     # проход по всем тренировочным входам
     random_input_number = np.random.randint(0, len(training_inputs)-1)
-    # расчет ошибки
+    # error calculation
     real_out = compute_full(training_inputs[random_input_number], matrix)
     #print(i, k1, training_inputs[k1], err, neuron_out.weights[0], neuron_out.delta_learning)
     # поправки к выходному нейрону
     back_propagation(matrix, training_outputs[random_input_number], par_L)
 
 
-# расчет
+# calculation
 print("Нейросеть настроена")
 print_matrix_neuron(matrix)
 for i in range(len(training_inputs)):
-    a = compute_full(training_inputs[i], matrix)
+    a = compute_full(training_inputs[i], matrix) #choose better name
     print(training_inputs[i], a, training_outputs[i])
 
 

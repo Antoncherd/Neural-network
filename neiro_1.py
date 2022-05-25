@@ -9,31 +9,31 @@ def df(x):
     return (0.5*(1+x)*(1-x))
 
 
-# object nueron declaration
-class neuron:
+# object neuron declaration
+class Neuron:
 
-    def __init__(self, N_in_link):
+    def __init__(self, n_in_link):
         self.in_data = []  # inputs
-        for i in range(N_in_link):
+        for i in range(n_in_link):
             self.in_data.append(0)
 
-        self.grad = 0  # gradient parametr
+        self.grad = 0  # gradient parameter
 
         self.weights = []  # input weights, 0 for additional
-        for i in range(N_in_link):
+        for i in range(n_in_link):
             self.weights.append(0)
         self.weight_extra = 0
 
         # output
-        summ = 0
+        sum = 0
         weight_extra = self.weight_extra
-        for i in range(N_in_link):
-            summ += self.in_data[i] * self.weights[i]
-        self.out_data = sigmoid(summ) + weight_extra
+        for i in range(n_in_link):
+            sum += self.in_data[i] * self.weights[i]
+        self.out_data = sigmoid(sum) + weight_extra
 
         # normalized gradient
         self.normalized_grad = []
-        for i in range(N_in_link):
+        for i in range(n_in_link):
             grad = self.grad
             weights_i = self.weights[i]
             self.normalized_grad.append(weights_i * grad)
@@ -85,7 +85,7 @@ def compute_full(in_array, matrix_neurons):
 
 def back_propagation(matrix_neurons, ideal_out, par_L):
     # for last neuron
-    out = matrix_neurons[ len(matrix_neurons) - 1 ][ len(matrix_neurons[len(matrix_neurons)-1]) - 1 ].out_data
+    out = matrix_neurons[ len(matrix_neurons) - 1 ][ len(matrix_neurons[len(matrix_neurons)-1]) - 1].out_data
     grad = (out - ideal_out) * df(out) # computed gradient for last neuron
     matrix_neurons[len(matrix_neurons)-1][len(matrix_neurons[len(matrix_neurons)-1])-1].grad = grad # write gradient
     matrix_neurons[len(matrix_neurons)-1][len(matrix_neurons[len(matrix_neurons)-1])-1].grad_normalize(grad) # normalized gradient
@@ -102,7 +102,7 @@ def back_propagation(matrix_neurons, ideal_out, par_L):
         for j in range(0, len(matrix_neurons[len(matrix_neurons) - i])): # here we go through current layer
             out = matrix_neurons[len(matrix_neurons) - i][j].out_data
             grad = 0
-            for k in range( len(matrix_neurons[len(matrix_neurons) - i + 1]) ): # here we summ gradients from next layer
+            for k in range(len(matrix_neurons[len(matrix_neurons) - i + 1])): # here we sum gradients from next layer
                 grad_next = matrix_neurons[len(matrix_neurons) - i + 1][k].normalized_grad[j]
                 grad += grad_next
             grad = grad * df(out) # computed gradient for j neuron from N-i layer
@@ -122,8 +122,6 @@ training_outputs = (-0.1, 0.9, -0.9, 0.5, -0.9, 0.9, -0.5, -0.9)
 #training_inputs = ((-1, -1), (-1, 1), (1, -1), (1, 1))
 #training_outputs = (-0.9, 0.9, 0.9, -0.9)
 par_L = 0.01  # параметр обучения
-
-
 
 def print_matrix_neuron (matrix_neuron):
     for i in range(len(matrix_neuron)):
@@ -145,13 +143,13 @@ for i in range(3): # amount layers
     matrix.append([])
 
 for i in range(5): # amount neurons in 0 layer
-    matrix[0].append(neuron(len(training_inputs[0])))
+    matrix[0].append(Neuron(len(training_inputs[0])))
     matrix[0][i].weights = np.random.sample(len(training_inputs[0]))
 for i in range(3): # amount neurons in 0 layer
-    matrix[1].append(neuron(len(matrix[0])))
+    matrix[1].append(Neuron(len(matrix[0])))
     matrix[1][i].weights = np.random.rand(len(matrix[0]))
 
-matrix[2].append(neuron(len(matrix[1])))   # out neuron
+matrix[2].append(Neuron(len(matrix[1])))   # out neuron
 matrix[2][0].weights = np.random.rand(len(matrix[1]))
 #matrix[2].append(neuron(3))
 #matrix[2][0].weights = np.random.sample(3)
